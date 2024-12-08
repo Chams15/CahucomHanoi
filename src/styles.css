@@ -3,20 +3,23 @@
 }
 
 .content {
-  border: 1px solid grey;
+  border: 1px solid rgb(0, 0, 0);
   display: inline-flex;
   font-family: sans-serif;
   justify-content: space-evenly;
   text-align: center;
   width: 100%;
+  background-color: rgb(18, 197, 221);
+ 
 }
 
 .column-container {
   align-items: flex-end;
-  border: 1px solid grey;
+  border: 1px solid rgb(18, 197, 221);
   height: 80vh;
   position: relative;
   width: 30%;
+  
 }
 
 .center-bar {
@@ -30,7 +33,7 @@
 }
 
 .tile {
-  background-color: burlywood;
+  background-color: rgb(2, 80, 224);
   border: 1px solid black;
   border-radius: 3px;
   height: 40px;
@@ -61,5 +64,5 @@
 }
 
 .win-number {
-  color: #2ff;
+  color: rgb(34, 255, 34);
 }

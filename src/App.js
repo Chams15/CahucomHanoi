@@ -40,6 +40,12 @@ const App = () => {
       column: 1,
       row: 6,
       width: 12
+    },
+    {
+      id: "Tile-7",
+      column: 1,
+      row: 6,
+      width: 15
     }
   ]);
 
@@ -88,16 +94,7 @@ const App = () => {
   return (
     <>
       <div className="App">
-        <div className="instructions">
-          <div>
-            <span className="text-title">Objective:</span> Rebuild the tower in
-            the third column in as little moves as possible
-          </div>
-          <div>
-            <span className="text-title">Instructions:</span> Move one tile at a
-            time, bigger tiles cannot go on top of smaller tiles
-          </div>
-        </div>
+        
         <div className="content">
           <div
             className="column-container"
