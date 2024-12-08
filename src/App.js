@@ -23,30 +23,7 @@ const App = () => {
       row: 3,
       width: 6
     },
-    {
-      id: "Tile-4",
-      column: 1,
-      row: 4,
-      width: 8
-    },
-    {
-      id: "Tile-5",
-      column: 1,
-      row: 5,
-      width: 10
-    },
-    {
-      id: "Tile-6",
-      column: 1,
-      row: 6,
-      width: 12
-    },
-    {
-      id: "Tile-7",
-      column: 1,
-      row: 6,
-      width: 15
-    }
+    
   ]);
 
   const handleDrag = (ev) => {
