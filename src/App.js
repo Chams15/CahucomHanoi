@@ -5,25 +5,9 @@ const App = () => {
   const [moveCount, setMoveCount] = useState(0);
   const [dragId, setDragId] = useState();
   const [tiles, setTiles] = useState([
-    {
-      id: "Tile-1",
-      column: 1,
-      row: 1,
-      width: 2
-    },
-    {
-      id: "Tile-2",
-      column: 1,
-      row: 2,
-      width: 4
-    },
-    {
-      id: "Tile-3",
-      column: 1,
-      row: 3,
-      width: 6
-    },
-    
+    { id: "Tile-1", column: 1, row: 1, width: 2 },
+    { id: "Tile-2", column: 1, row: 2, width: 4 },
+    { id: "Tile-3", column: 1, row: 3, width: 6 },
   ]);
 
   const handleDrag = (ev) => {
@@ -41,132 +25,87 @@ const App = () => {
 
   const handleDrop = (ev) => {
     const dragTile = tiles.find((tile) => tile.id === dragId);
-    const dropColumn = ev.currentTarget.id;
+    const dropColumn = parseInt(ev.currentTarget.id, 10);
 
-    const dropColumnTopTile = tiles
-      .filter((tile) => tile.column.toString() === dropColumn.toString())
-      .sort((a, b) => a.width - b.width)[0];
-
-    let newTileState = tiles;
+    const dropColumnTiles = tiles.filter((tile) => tile.column === dropColumn);
+    const dropColumnTopTile = dropColumnTiles.sort((a, b) => a.width - b.width)[0];
 
     if (!dropColumnTopTile || dragTile.width < dropColumnTopTile.width) {
-      newTileState = tiles.map((tile) => {
-        if (tile.id === dragTile.id) {
-          tile.column = parseInt(dropColumn, 10);
-          setMoveCount(moveCount + 1);
-        }
-
-        return tile;
-      });
+      const newTileState = tiles.map((tile) =>
+        tile.id === dragTile.id
+          ? { ...tile, column: dropColumn, row: dropColumnTiles.length + 1 }
+          : tile
+      );
+      setTiles(newTileState);
+      setMoveCount((prevCount) => prevCount + 1);
     }
-
-    setTiles(newTileState);
   };
 
-  const column1Tiles = tiles.filter((tile) => tile.column === 1);
-  const column2Tiles = tiles.filter((tile) => tile.column === 2);
-  const column3Tiles = tiles.filter((tile) => tile.column === 3);
+  const addDisk = () => {
+    const largestWidth = Math.max(...tiles.map((tile) => tile.width), 0);
+    const newWidth = largestWidth + 2;
+    const newRow = tiles.filter((tile) => tile.column === 1).length + 1;
+
+    const newDisk = {
+      id: `Tile-${tiles.length + 1}`,
+      column: 1,
+      row: newRow,
+      width: newWidth,
+    };
+
+    setTiles((prevTiles) => [...prevTiles, newDisk]);
+  };
+
+  const renderColumn = (columnNumber) => {
+    const columnTiles = tiles
+      .filter((tile) => tile.column === columnNumber)
+      .sort((a, b) => a.width - b.width);
+
+    return (
+      <div
+        key={columnNumber}
+        className="column-container"
+        id={columnNumber}
+        onDragOver={(ev) => ev.preventDefault()}
+        onDrop={handleDrop}
+      >
+        <div className="center-bar" />
+        {columnTiles.map((tile, index) => {
+          const tileStyles = {
+            width: `${tile.width}em`,
+            marginTop: index === 0 ? `calc(80vh - ${columnTiles.length * 40 + 20}px)` : "0",
+          };
+          return (
+            <div
+              key={tile.id}
+              id={tile.id}
+              className="tile"
+              draggable
+              onDragStart={handleDrag}
+              style={tileStyles}
+            />
+          );
+        })}
+      </div>
+    );
+  };
 
   const winCondition = tiles.every((tile) => tile.column === 3);
+
   return (
     <>
       <div className="App">
-        
+        <button className="add-disk-button" onClick={addDisk}>
+          Add Disk
+        </button>
         <div className="content">
-          <div
-            className="column-container"
-            id={1}
-            onDragOver={(ev) => ev.preventDefault()}
-            onDrop={handleDrop}
-          >
-            <div className="center-bar" />
-            {column1Tiles
-              .sort((a, b) => a.width - b.width)
-              .map((tile, index) => {
-                const tileCount = column1Tiles.length;
-                const tileStyles = {
-                  width: `${tile.width}em`
-                };
-                tileStyles.marginTop =
-                  index === 0 ? `calc(80vh - ${tileCount * 40 + 20}px)` : "0";
-                return (
-                  <div
-                    {...tile}
-                    className="tile"
-                    draggable
-                    key={`column-1-${tile.id}`}
-                    onDragOver={(ev) => ev.preventDefault()}
-                    onDragStart={handleDrag}
-                    style={tileStyles}
-                  />
-                );
-              })}
-          </div>
-          <div
-            className="column-container"
-            id={2}
-            onDragOver={(ev) => ev.preventDefault()}
-            onDrop={handleDrop}
-          >
-            <div className="center-bar" />
-            {column2Tiles
-              .sort((a, b) => a.width - b.width)
-              .map((tile, index) => {
-                const tileCount = column2Tiles.length;
-                const tileStyles = {
-                  width: `${tile.width}em`
-                };
-                tileStyles.marginTop =
-                  index === 0 ? `calc(80vh - ${tileCount * 40 + 20}px)` : "0";
-                return (
-                  <div
-                    {...tile}
-                    className="tile"
-                    draggable
-                    key={`column-2-${tile.id}`}
-                    onDragOver={(ev) => ev.preventDefault()}
-                    onDragStart={handleDrag}
-                    style={tileStyles}
-                  />
-                );
-              })}
-          </div>
-          <div
-            className="column-container"
-            id={3}
-            onDragOver={(ev) => ev.preventDefault()}
-            onDrop={handleDrop}
-          >
-            <div className="center-bar" />
-            {column3Tiles
-              .sort((a, b) => a.width - b.width)
-              .map((tile, index) => {
-                const tileCount = column3Tiles.length;
-                const tileStyles = {
-                  width: `${tile.width}em`
-                };
-                tileStyles.marginTop =
-                  index === 0 ? `calc(80vh - ${tileCount * 40 + 20}px)` : "0";
-                return (
-                  <div
-                    {...tile}
-                    className="tile"
-                    draggable
-                    key={`column-3-${tile.id}`}
-                    onDragOver={(ev) => ev.preventDefault()}
-                    onDragStart={handleDrag}
-                    style={tileStyles}
-                  />
-                );
-              })}
-          </div>
+          {[1, 2, 3].map(renderColumn)}
         </div>
         {winCondition && (
           <div className="win-message">
             You Win!
             <div className="win-subtitle">
-              You did it in <span className="win-number">{moveCount}</span>{" "}
-              moves
+              You did it in <span className="win-number">{moveCount}</span> moves
             </div>
           </div>
         )}
